@@ -29,8 +29,10 @@
       icon="󰁾"
     elif (( percent >= 15 )); then
       icon="󰁻"
-    else
+    elif (( 15 > percent )); then
       icon="!!!"
+    else
+      icon="N/A"
     fi
 
     echo "$icon"

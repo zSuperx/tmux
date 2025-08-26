@@ -4,15 +4,18 @@
   ...
 }: let
   inherit (lib.strings) concatMapStrings;
-  scripts = import ./config/scripts.nix {inherit pkgs lib;};
+  # This probably sucks, but how else do I propagate `scripts` to other files without 
+  # double importing ./scripts.nix ?
+  scripts = import ./scripts.nix {inherit pkgs lib;};
   plugins = import ./config/plugins.nix {inherit pkgs lib scripts;};
   settings = import ./config/settings.nix {inherit pkgs lib scripts;};
-  conf-files = [
+  config-files = [
     settings
     plugins
   ];
+  # Populate `tmux-main.conf` with imports for other files
   tmux-main = pkgs.writeText "tmux-main.conf" (
-    concatMapStrings (x: "source-file " + x + "\n") conf-files
+    concatMapStrings (x: "source-file " + x + "\n") config-files
   );
 in
   pkgs.stdenv.mkDerivation {
@@ -25,6 +28,7 @@ in
       pkgs.makeBinaryWrapper
     ];
 
+    # tmux will use this derivation's hash as its socket name.
     installPhase = ''
       mkdir -p $out/bin
       echo $hash
