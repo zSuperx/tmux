@@ -5,7 +5,6 @@
   ...
 }:
 pkgs.writeText "tmux-core.conf" ''
-  set  -g default-terminal "screen"
   set  -g base-index      0
   setw -g pane-base-index 0
 
