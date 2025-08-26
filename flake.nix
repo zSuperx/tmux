@@ -14,7 +14,10 @@
           inherit system;
         };
       in rec {
-        tmux = import ./package.nix { inherit pkgs inputs; inherit (nixpkgs) lib; };
+        tmux = import ./package.nix {
+          inherit pkgs inputs;
+          inherit (nixpkgs) lib;
+        };
 
         default = tmux;
       }
