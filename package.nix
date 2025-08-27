@@ -4,11 +4,9 @@
   ...
 }: let
   inherit (lib.strings) concatMapStrings;
-  # This probably sucks, but how else do I propagate `scripts` to other files without 
-  # double importing ./scripts.nix ?
-  scripts = import ./scripts.nix {inherit pkgs lib;};
-  plugins = import ./config/plugins.nix {inherit pkgs lib scripts;};
-  settings = import ./config/settings.nix {inherit pkgs lib scripts;};
+  scripts = pkgs.callPackage ./scripts.nix {};
+  plugins = pkgs.callPackage ./config/plugins.nix { inherit scripts; };
+  settings = pkgs.callPackage ./config/settings.nix { inherit scripts; };
   config-files = [
     settings
     plugins
@@ -19,8 +17,7 @@
   );
 in
   pkgs.stdenv.mkDerivation {
-    pname = "tmux";
-    version = "1.0.0";
+    inherit (pkgs.tmux) pname version;
 
     src = ./.;
 

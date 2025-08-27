@@ -1,8 +1,6 @@
 {
   pkgs,
-  lib,
   scripts,
-  ...
 }:
 pkgs.writeText "tmux-core.conf" ''
   set  -g base-index      0
